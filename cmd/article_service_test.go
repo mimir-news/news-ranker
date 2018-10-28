@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	mqtest "github.com/mimir-news/pkg/mq/mqtest"
+	"github.com/mimir-news/pkg/mq/mqtest"
 	"github.com/mimir-news/pkg/schema/news"
 	"github.com/stretchr/testify/assert"
 )
