@@ -31,11 +31,7 @@ func (e *env) handleRankObjectMessage(msg mq.Message) error {
 
 func (e *env) rankNewArticle(article news.Article, rankObject news.RankObject) {
 	scrapeTarget := newScrapeTarget(article, rankObject)
-
-	err := e.mqClient.Send(scrapeTarget, e.exchange(), e.scrapeQueue())
-	if err != nil {
-		log.Println(err)
-	}
+	e.queueScrapeTarget(scrapeTarget)
 }
 
 func (e *env) rankExistingArticle(article news.Article, rankObject news.RankObject) {
@@ -46,23 +42,13 @@ func (e *env) rankExistingArticle(article news.Article, rankObject news.RankObje
 	}
 
 	switch update.Type {
-	case domain.NEW_SUBJECTS_AND_REFERENCES:
-	case domain.NEW_SUBJECTS:
-		e.rankWithNewSubjects(update)
+	case domain.NEW_SUBJECTS_AND_REFERENCES, domain.NEW_SUBJECTS:
+		e.queueScrapeTarget(update.ToScapeTarget())
 	case domain.NEW_REFERENCES:
 		e.rankWithNewReferences(update)
 	default:
 		log.Printf("Taking no action on update type: %d for article: %s\n",
 			update.Type, article.ID)
-	}
-}
-
-func (e *env) rankWithNewSubjects(update domain.ArticleUpdate) {
-	scrapeTarget := update.ToScapeTarget()
-
-	err := e.mqClient.Send(scrapeTarget, e.exchange(), e.scrapeQueue())
-	if err != nil {
-		log.Println(err)
 	}
 }
 
@@ -99,6 +85,13 @@ func (e *env) getArticleUpdate(article news.Article, rankObject news.RankObject)
 	articleUpdate := domain.CreateArticleUpdate(
 		article, subjects, rankObject.Subjects, referers, rankObject.Referer)
 	return articleUpdate, nil
+}
+
+func (e *env) queueScrapeTarget(scrapeTarget news.ScrapeTarget) {
+	err := e.mqClient.Send(scrapeTarget, e.exchange(), e.scrapeQueue())
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func parseRankObject(msg mq.Message) (news.RankObject, error) {
