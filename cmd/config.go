@@ -13,9 +13,11 @@ const (
 )
 
 type config struct {
-	MQ           mqConfig      `env:"MQ"`
-	DB           dbutil.Config `env:"DB"`
-	TwitterUsers int64         `env:"TWITTER_USERS" envDefault:"320000000"`
+	MQ               mqConfig      `env:"MQ"`
+	DB               dbutil.Config `env:"DB"`
+	TwitterUsers     int64         `env:"TWITTER_USERS" envDefault:"320000000"`
+	HearbeatFile     string        `env:"HEARTBEAT_FILE"`
+	HearbeatInterval int           `env:"HEARTBEAT_INTERVAL"`
 }
 
 type mqConfig struct {

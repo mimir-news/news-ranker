@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:568a4f8603d3988fe461ff26c03b3f9bb29315403ddf4d27ccb681621e2be62b"
+  name = "github.com/CzarSimon/go-file-heartbeat"
+  packages = ["heartbeat"]
+  pruneopts = "UT"
+  revision = "3fc4cb1ab1d8d9a6910f9010f6aad46aaaa9fbdd"
+  version = "1.0"
+
+[[projects]]
   digest = "1:a571648c5f1a3f20fa405d1cf924b941c5bb236ea6d0565a63c0994e38dd8f82"
   name = "github.com/caarlos0/env"
   packages = ["."]
@@ -58,18 +66,9 @@
   revision = "05fccaae8fc423476d98fd4c3e4699ba0fbbde48"
 
 [[projects]]
-  digest = "1:0b8b37af4cb815909beae88e0c0c2f6e439c481ac65e8067ff0d01231bc16ca6"
-  name = "github.com/mimir-news/id"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "b28c9fadf09f101570617727b5de413e0a62afd1"
-  version = "1.0"
-
-[[projects]]
-  digest = "1:e6e8d9a2fe18a4789772f56efca0559d0bac172606258a3f294684728e10295b"
+  digest = "1:4cc1e6b783b6ec306e8415a1634e4a918d3b5be716b6af4617b44d884e972ef3"
   name = "github.com/mimir-news/pkg"
   packages = [
-    ".",
     "dbutil",
     "id",
     "mq",
@@ -143,9 +142,8 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/CzarSimon/go-file-heartbeat/heartbeat",
     "github.com/caarlos0/env",
-    "github.com/mimir-news/id",
-    "github.com/mimir-news/pkg",
     "github.com/mimir-news/pkg/dbutil",
     "github.com/mimir-news/pkg/id",
     "github.com/mimir-news/pkg/mq",

@@ -40,3 +40,7 @@
 [[constraint]]
   name = "github.com/mimir-news/pkg"
   version = "0.1.0"
+
+[[constraint]]
+  name = "github.com/CzarSimon/go-file-heartbeat"
+  version = "1.0.0"
