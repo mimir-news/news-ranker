@@ -10,20 +10,20 @@ import (
 )
 
 type env struct {
-	config      Config
+	config      config
 	mqClient    mq.Client
 	articleRepo repository.ArticleRepo
 	clusterRepo repository.ClusterRepo
 	db          *sql.DB
 }
 
-func setupEnv(config Config) *env {
-	mqClient, err := mq.NewClient(config.MQConfig())
+func setupEnv(conf config) *env {
+	mqClient, err := mq.NewClient(conf.MQConfig())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db, err := config.DB.ConnectPostgres()
+	db, err := conf.DB.ConnectPostgres()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,7 +33,7 @@ func setupEnv(config Config) *env {
 	clusterRepo := repository.NewClusterRepo(db)
 
 	return &env{
-		config:      config,
+		config:      conf,
 		mqClient:    mqClient,
 		articleRepo: articleRepo,
 		clusterRepo: clusterRepo,

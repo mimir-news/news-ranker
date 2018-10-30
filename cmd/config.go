@@ -12,13 +12,13 @@ const (
 	SERVICE_NAME = "news-ranker"
 )
 
-type Config struct {
-	MQ           MQConfig      `env:"MQ"`
+type config struct {
+	MQ           mqConfig      `env:"MQ"`
 	DB           dbutil.Config `env:"DB"`
 	TwitterUsers int64         `env:"TWITTER_USERS" envDefault:"320000000"`
 }
 
-type MQConfig struct {
+type mqConfig struct {
 	Host         string `env:"HOST"`
 	Port         string `env:"PORT"`
 	User         string `env:"USER"`
@@ -29,8 +29,8 @@ type MQConfig struct {
 	RankQueue    string `env:"RANK_QUEUE"`
 }
 
-func getConfig() Config {
-	var conf Config
+func getConfig() config {
+	var conf config
 	err := envConf.Parse(&conf)
 	if err != nil {
 		log.Fatal(err)
@@ -38,6 +38,6 @@ func getConfig() Config {
 	return conf
 }
 
-func (c Config) MQConfig() mq.Config {
+func (c config) MQConfig() mq.Config {
 	return mq.NewConfig(c.MQ.Host, c.MQ.Port, c.MQ.User, c.MQ.Password)
 }

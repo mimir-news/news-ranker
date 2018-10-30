@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	conf := newConfig()
+	conf := getConfig()
 	e := setupEnv(conf)
 	wg := &sync.WaitGroup{}
 
@@ -15,19 +15,4 @@ func main() {
 	go handleSubscription(articlesHandler, wg)
 
 	wg.Wait()
-}
-
-func newConfig() Config {
-	return Config{
-		MQ: MQConfig{
-			Host:         "localhost",
-			Port:         "5672",
-			User:         "newsranker",
-			Password:     "password",
-			Exchange:     "x-news",
-			ScrapeQueue:  "q-scrape-targets",
-			ScrapedQueue: "q-scraped-articles",
-			RankQueue:    "q-rank-objects",
-		},
-	}
 }

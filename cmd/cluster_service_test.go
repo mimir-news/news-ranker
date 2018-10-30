@@ -241,9 +241,9 @@ func newMockEnv(
 	clusterRepo repository.ClusterRepo,
 	mqClient mq.Client) *env {
 	return &env{
-		config: Config{
+		config: config{
 			TwitterUsers: 1000,
-			MQ: MQConfig{
+			MQ: mqConfig{
 				Exchange:     "x-news",
 				ScrapeQueue:  "q-scrape-targets",
 				ScrapedQueue: "q-scraped-articles",

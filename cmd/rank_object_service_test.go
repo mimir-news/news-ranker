@@ -58,8 +58,8 @@ func TestHandleRankObjectMessage_NewArticle(t *testing.T) {
 	}
 
 	mockEnv := &env{
-		config: Config{
-			MQ: MQConfig{
+		config: config{
+			MQ: mqConfig{
 				Exchange:    "mq-exchange",
 				ScrapeQueue: "scrape-queue",
 			},
@@ -147,8 +147,8 @@ func TestHandleRankObjectMessage_ExistingArticleNewSubjects(t *testing.T) {
 	}
 
 	mockEnv := &env{
-		config: Config{
-			MQ: MQConfig{
+		config: config{
+			MQ: mqConfig{
 				Exchange:    "mq-exchange",
 				ScrapeQueue: "scrape-queue",
 			},
@@ -265,8 +265,8 @@ func TestHandleRankObjectMessage_ExistingArticleNewReferers(t *testing.T) {
 	}
 
 	mockEnv := &env{
-		config: Config{
-			MQ: MQConfig{
+		config: config{
+			MQ: mqConfig{
 				Exchange:    "mq-exchange",
 				ScrapeQueue: "scrape-queue",
 			},
