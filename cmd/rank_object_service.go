@@ -30,7 +30,6 @@ func (e *env) handleRankObjectMessage(msg mq.Message) error {
 }
 
 func (e *env) rankNewArticle(article news.Article, rankObject news.RankObject) {
-	article.ReferenceScore = calcReferenceScore(e.config.TwitterUsers, rankObject.Referer)
 	scrapeTarget := newScrapeTarget(article, rankObject)
 
 	err := e.mqClient.Send(scrapeTarget, e.exchange(), e.scrapeQueue())
