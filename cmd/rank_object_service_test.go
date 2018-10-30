@@ -212,6 +212,126 @@ func TestHandleRankObjectMessage_ExistingArticleNewSubjects(t *testing.T) {
 	assert.Equal((news.Referer{}).String(), articleRepo.saveRefererArg.String())
 }
 
+func TestHandleRankObjectMessage_ExistingArticleNewReferers(t *testing.T) {
+	assert := assert.New(t)
+
+	ro := getTestRankObject()
+	articleURL := ro.URLs[0]
+	message := mqtest.NewMessage(ro, false, false)
+
+	article := news.Article{
+		ID:             "a-0",
+		URL:            articleURL,
+		Title:          "t-0",
+		ReferenceScore: 0.5,
+		ArticleDate:    time.Now(),
+	}
+
+	oldSubjects := []news.Subject{
+		news.Subject{
+			ID:        "s-0",
+			Symbol:    "S0",
+			Name:      "subject-0",
+			Score:     0.1,
+			ArticleID: article.ID,
+		},
+		news.Subject{
+			ID:        "s-1",
+			Symbol:    "S1",
+			Name:      "subject-1",
+			Score:     0.2,
+			ArticleID: article.ID,
+		},
+	}
+
+	oldReferers := []news.Referer{
+		news.Referer{
+			ID:            "r-1",
+			ExternalID:    "e-id-1",
+			FollowerCount: 1000,
+			ArticleID:     article.ID,
+		},
+	}
+
+	articleRepo := &mockArticleRepo{
+		findByURLArticle: article,
+		findByURLErr:     nil,
+
+		articleSubjects:        oldSubjects,
+		findArticleSubjectsErr: nil,
+
+		articleReferers:        oldReferers,
+		findArticleReferersErr: nil,
+	}
+
+	mockEnv := &env{
+		config: Config{
+			MQ: MQConfig{
+				Exchange:    "mq-exchange",
+				ScrapeQueue: "scrape-queue",
+			},
+			TwitterUsers: 2000,
+		},
+		mqClient:    mqtest.NewSuccessMockClient(nil),
+		articleRepo: articleRepo,
+		clusterRepo: &mockClusterRepo{},
+	}
+
+	err := mockEnv.handleRankObjectMessage(message)
+	assert.Nil(err)
+	assert.Equal(articleURL, articleRepo.findByURLArg)
+	assert.Equal(article.ID, articleRepo.findArticleSubjectsArg)
+	assert.Equal(article.ID, articleRepo.findArticleReferersArg)
+
+	// Checks that an only new reference update was not initated.
+	assertScore(1.0, articleRepo.updateArg.ReferenceScore, t)
+	assert.Equal(ro.Referer.ExternalID, articleRepo.saveRefererArg.ExternalID)
+	assert.Equal(ro.Referer.FollowerCount, articleRepo.saveRefererArg.FollowerCount)
+
+	articleRepo = &mockArticleRepo{
+		findByURLArticle: article,
+		findByURLErr:     nil,
+
+		articleSubjects:        oldSubjects,
+		findArticleSubjectsErr: nil,
+
+		articleReferers:        oldReferers,
+		findArticleReferersErr: nil,
+
+		updateErr: mockError,
+	}
+	mockEnv.articleRepo = articleRepo
+
+	err = mockEnv.handleRankObjectMessage(message)
+	assert.Nil(err)
+
+	// Checks that an only new reference update was not initated.
+	assertScore(1.0, articleRepo.updateArg.ReferenceScore, t)
+	assert.Equal((news.Referer{}).String(), articleRepo.saveRefererArg.String())
+
+	articleRepo = &mockArticleRepo{
+		findByURLArticle: article,
+		findByURLErr:     nil,
+
+		articleSubjects:        oldSubjects,
+		findArticleSubjectsErr: nil,
+
+		articleReferers:        oldReferers,
+		findArticleReferersErr: nil,
+
+		saveRefererErr: mockError,
+	}
+	mockEnv.articleRepo = articleRepo
+
+	err = mockEnv.handleRankObjectMessage(message)
+	assert.Nil(err)
+
+	// Checks that an only new reference update was not initated.
+	assertScore(1.0, articleRepo.updateArg.ReferenceScore, t)
+	assert.Equal(ro.Referer.ExternalID, articleRepo.saveRefererArg.ExternalID)
+	assert.Equal(ro.Referer.FollowerCount, articleRepo.saveRefererArg.FollowerCount)
+}
+
 func getTestRankObject() news.RankObject {
 	return news.RankObject{
 		URLs: []string{
