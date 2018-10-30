@@ -118,10 +118,9 @@ func calcReferenceScore(twitterUsers int64, references ...news.Referer) float64 
 
 func newScrapeTarget(article news.Article, ro news.RankObject) news.ScrapeTarget {
 	return news.ScrapeTarget{
-		URL:            article.URL,
-		Subjects:       ro.Subjects,
-		ReferenceScore: article.ReferenceScore,
-		ArticleID:      article.ID,
-		Referer:        ro.Referer,
+		URL:       article.URL,
+		Subjects:  ro.Subjects,
+		ArticleID: article.ID,
+		Referer:   ro.Referer,
 	}
 }

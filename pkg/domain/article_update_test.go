@@ -183,11 +183,10 @@ func TestToScrapeTarget(t *testing.T) {
 			news.Subject{Symbol: "s-0"},
 			news.Subject{Symbol: "s-1"},
 		},
-		Referer:        news.Referer{ExternalID: "r-1"},
-		ReferenceScore: 0.5,
-		Title:          "a-title",
-		Body:           "a-body",
-		ArticleID:      "a-id",
+		Referer:   news.Referer{ExternalID: "r-1"},
+		Title:     "a-title",
+		Body:      "a-body",
+		ArticleID: "a-id",
 	}
 
 	actualTarget := update.ToScapeTarget()

@@ -28,13 +28,12 @@ type ArticleUpdate struct {
 func (u ArticleUpdate) ToScapeTarget() news.ScrapeTarget {
 	article := u.Article
 	return news.ScrapeTarget{
-		URL:            article.URL,
-		Subjects:       u.Subjects,
-		Referer:        u.NewReferer,
-		ReferenceScore: article.ReferenceScore,
-		Title:          article.Title,
-		Body:           article.Body,
-		ArticleID:      article.ID,
+		URL:       article.URL,
+		Subjects:  u.Subjects,
+		Referer:   u.NewReferer,
+		Title:     article.Title,
+		Body:      article.Body,
+		ArticleID: article.ID,
 	}
 }
 

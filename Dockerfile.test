@@ -1,0 +1,12 @@
+FROM czarsimon/godep:1.11.1-alpine3.8 as build
+
+RUN apk update && apk add gcc
+
+# Copy source
+WORKDIR /go/src/news-ranker
+COPY . .
+
+# Install dependencies
+RUN dep ensure
+
+CMD ["sh", "run-tests.sh"]

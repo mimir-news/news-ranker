@@ -27,11 +27,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:6b2a1de27c5a2e991a8a7bde210ccf80bfdd7e20ba483f5ea8afa71e5763af09"
+  digest = "1:3ec942ddf5780668c009eabde484131095069e98b1e52356a77494361b33e6d4"
   name = "github.com/gobuffalo/packd"
   packages = ["."]
   pruneopts = "UT"
-  revision = "6d52e0eabf418d6b73ffb31733aed8129b875db1"
+  revision = "cf76bd87a5a65a96a4b3fcda4c99c424f610acfd"
 
 [[projects]]
   digest = "1:06fbeddb7c7a7be8ea88118f0d7af464662baea9d25925a634d219f5a3b2cedc"
@@ -58,10 +58,18 @@
   revision = "05fccaae8fc423476d98fd4c3e4699ba0fbbde48"
 
 [[projects]]
-  branch = "master"
-  digest = "1:d93347ba3e665190fcc7904a385313dac3375da6a77c28afef7a5de6f66f000f"
+  digest = "1:0b8b37af4cb815909beae88e0c0c2f6e439c481ac65e8067ff0d01231bc16ca6"
+  name = "github.com/mimir-news/id"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b28c9fadf09f101570617727b5de413e0a62afd1"
+  version = "1.0"
+
+[[projects]]
+  digest = "1:e6e8d9a2fe18a4789772f56efca0559d0bac172606258a3f294684728e10295b"
   name = "github.com/mimir-news/pkg"
   packages = [
+    ".",
     "dbutil",
     "id",
     "mq",
@@ -69,7 +77,8 @@
     "schema/news",
   ]
   pruneopts = "UT"
-  revision = "f974ea40146e1d2e711b9a090cbeb30ffab0d4a3"
+  revision = "2e936e7243bdd9d1d687c556da6ca52186475427"
+  version = "0.1"
 
 [[projects]]
   digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
@@ -135,6 +144,8 @@
   analyzer-version = 1
   input-imports = [
     "github.com/caarlos0/env",
+    "github.com/mimir-news/id",
+    "github.com/mimir-news/pkg",
     "github.com/mimir-news/pkg/dbutil",
     "github.com/mimir-news/pkg/id",
     "github.com/mimir-news/pkg/mq",
