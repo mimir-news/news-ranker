@@ -9,6 +9,8 @@ pipeline {
 
     def shortCommit
 
+    def releaseStage
+
     stage('Checkout') {
         def scmVars = checkout scm
         shortCommit = scmVars.GIT_COMMIT.take(7)
@@ -23,6 +25,9 @@ pipeline {
     }
 
     stage('Test') {
+        if (env.BRANCH_NAME != 'master') {
+            return
+        }
         def testImage = "$projectName-test:$version"
         sh "docker build -t $testImage ."
         sh "docker run --rm $testImage"
@@ -30,6 +35,9 @@ pipeline {
     }
 
     stage('Package') {
+        if (env.BRANCH_NAME != 'master') {
+            return
+        }
         // Builds and tags docker images
         sh "docker build -t $imageName -t $detailedName -t $latestName ."
         sh "docker push $imageName"
@@ -43,8 +51,7 @@ pipeline {
     }
 
     stage('Deploy') {
-        sh 'kubectl config set-context mimir'
-        sh 'kubectl apply -f k8s/'
+        echo "Run deployment to kubernetes here"
     }
 
 }
