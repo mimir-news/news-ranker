@@ -1,0 +1,5 @@
+{
+    "name": "news-ranker",
+    "version": "2.0",
+    "registry": "eu.gcr.io/mimir-185212"
+}
