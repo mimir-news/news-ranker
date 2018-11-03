@@ -18,20 +18,20 @@ node() {
         shortCommit = scmVars.GIT_COMMIT.take(7)
 
         projectName = appInfo('name')
-        println projectName
         version = appInfo('version')
-        println projectName
         containerRegistry = appInfo('registry')
-        println projectName
         imageName = appInfo('image')
-        println projectName
+        println imageName
         
         detailedName = "$imageName-$shortCommit"
+        println imageName
         latestName = "$containerRegistry/$projectName:latest"
+        println latestName
     }
 
     stage('Test') {
         if (env.BRANCH_NAME != 'master') {
+            println env.BRANCH_NAME
             return
         }
         def testImage = "$projectName-test:$version"
@@ -41,9 +41,6 @@ node() {
     }
 
     stage('Package') {
-        if (env.BRANCH_NAME != 'master') {
-            return
-        }
         // Builds and tags docker images
         sh "docker build -t $imageName -t $detailedName -t $latestName ."
         sh "docker push $imageName"
