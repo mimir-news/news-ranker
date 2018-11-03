@@ -18,9 +18,13 @@ node() {
         shortCommit = scmVars.GIT_COMMIT.take(7)
 
         projectName = appInfo('name')
+        println projectName
         version = appInfo('version')
+        println projectName
         containerRegistry = appInfo('registry')
+        println projectName
         imageName = appInfo('image')
+        println projectName
         
         detailedName = "$imageName-$shortCommit"
         latestName = "$containerRegistry/$projectName:latest"
