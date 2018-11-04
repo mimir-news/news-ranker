@@ -1,6 +1,6 @@
-NAME=news-ranker
-VERSION=2.0-DEV
-IMAGE="eu.gcr.io/mimir-123/$(NAME):$(VERSION)"
+NAME = $(shell appv name)
+VERSION = $(shell appv version)
+IMAGE = $(shell appv image)
 
 test:
 	sh run-tests.sh

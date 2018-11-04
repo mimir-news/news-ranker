@@ -1,6 +1,4 @@
-FROM czarsimon/godep:1.11.1-alpine3.8 as build
-
-RUN apk update && apk add gcc
+FROM czarsimon/godep:1.11.2-stretch
 
 # Copy source
 WORKDIR /go/src/news-ranker
