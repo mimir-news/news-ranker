@@ -1,4 +1,4 @@
-FROM czarsimon/godep:1.11.1-alpine3.8 as build
+FROM czarsimon/godep:1.11.2-alpine3.8 as build
 
 # Copy source
 WORKDIR /go/src/news-ranker
