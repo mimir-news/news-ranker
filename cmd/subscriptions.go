@@ -26,7 +26,7 @@ func newHandler(queue string, client mq.Client, fn handlerFunc) handler {
 func handleSubscription(h handler, wg *sync.WaitGroup) {
 	wg.Add(1)
 	defer wg.Done()
-	messageChannel, err := h.client.Subscribe(h.queue, SERVICE_NAME)
+	messageChannel, err := h.client.Subscribe(h.queue, ServiceName)
 	if err != nil {
 		log.Println(err)
 		return

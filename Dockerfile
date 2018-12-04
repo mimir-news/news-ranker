@@ -14,4 +14,5 @@ RUN go build
 FROM alpine:3.8 as run
 WORKDIR /opt/app
 COPY --from=build /go/src/news-ranker/cmd/cmd news-ranker
+COPY cmd/migrations migrations
 CMD ["./news-ranker"]

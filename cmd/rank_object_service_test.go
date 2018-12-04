@@ -87,7 +87,7 @@ func TestHandleRankObjectMessage_NewArticle(t *testing.T) {
 	assert.Equal("", articleRepo.findArticleSubjectsArg)
 
 	failingRepo := &mockArticleRepo{
-		findByURLErr: mockError,
+		findByURLErr: errMock,
 	}
 	mockEnv.articleRepo = failingRepo
 	mockEnv.mqClient = mqtest.NewSuccessMockClient(nil)
@@ -172,7 +172,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewSubjects(t *testing.T) {
 		findByURLErr:     nil,
 
 		articleSubjects:        nil,
-		findArticleSubjectsErr: mockError,
+		findArticleSubjectsErr: errMock,
 
 		articleReferers:        oldReferers,
 		findArticleReferersErr: nil,
@@ -197,7 +197,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewSubjects(t *testing.T) {
 		findArticleSubjectsErr: nil,
 
 		articleReferers:        oldReferers,
-		findArticleReferersErr: mockError,
+		findArticleReferersErr: errMock,
 	}
 	mockEnv.articleRepo = articleRepo
 
@@ -298,7 +298,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewReferers(t *testing.T) {
 		articleReferers:        oldReferers,
 		findArticleReferersErr: nil,
 
-		updateErr: mockError,
+		updateErr: errMock,
 	}
 	mockEnv.articleRepo = articleRepo
 
@@ -319,7 +319,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewReferers(t *testing.T) {
 		articleReferers:        oldReferers,
 		findArticleReferersErr: nil,
 
-		saveRefererErr: mockError,
+		saveRefererErr: errMock,
 	}
 	mockEnv.articleRepo = articleRepo
 

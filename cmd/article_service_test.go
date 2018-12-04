@@ -36,7 +36,7 @@ func TestHandleScrapedArticleMessage_Success(t *testing.T) {
 		findArticleReferersErr: nil,
 		saveScrapedArticleErr:  nil,
 		articleSubjects:        nil, // Set up to prevent clusterering which is not in scope for the test.
-		findArticleSubjectsErr: mockError,
+		findArticleSubjectsErr: errMock,
 	}
 	mockEnv := &env{
 		config:      config{TwitterUsers: 6000},
@@ -66,7 +66,7 @@ func TestHandleScrapedArticleMessage_FailedDBInteractions(t *testing.T) {
 
 	articleRepoNoReferers := &mockArticleRepo{
 		articleReferers:        nil,
-		findArticleReferersErr: mockError,
+		findArticleReferersErr: errMock,
 	}
 
 	mockEnv := &env{
@@ -91,7 +91,7 @@ func TestHandleScrapedArticleMessage_FailedDBInteractions(t *testing.T) {
 	articleRepoFailedSave := &mockArticleRepo{
 		articleReferers:        oldReferers,
 		findArticleReferersErr: nil,
-		saveScrapedArticleErr:  mockError,
+		saveScrapedArticleErr:  errMock,
 	}
 
 	mockEnv.articleRepo = articleRepoFailedSave

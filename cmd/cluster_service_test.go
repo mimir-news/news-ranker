@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var mockError = errors.New("mock error")
+var errMock = errors.New("mock error")
 var emptyCluster = domain.ArticleCluster{}
 
 func TestCreateNewCluster(t *testing.T) {
@@ -60,7 +60,7 @@ func TestCreateNewCluster(t *testing.T) {
 	clusterRepo = &mockClusterRepo{
 		findByHashCluster: emptyCluster,
 		findByHashErr:     repository.ErrNoSuchCluster,
-		saveReturn:        mockError,
+		saveReturn:        errMock,
 	}
 	mockEnv = newMockEnv(nil, clusterRepo, nil)
 
@@ -72,7 +72,7 @@ func TestCreateNewCluster(t *testing.T) {
 
 	clusterRepo = &mockClusterRepo{
 		findByHashCluster: emptyCluster,
-		findByHashErr:     mockError,
+		findByHashErr:     errMock,
 	}
 	mockEnv = newMockEnv(nil, clusterRepo, nil)
 
@@ -135,7 +135,7 @@ func TestUpdateArticleCluster(t *testing.T) {
 	clusterRepo = &mockClusterRepo{
 		findByHashCluster: existingCluster,
 		findByHashErr:     nil,
-		updateReturn:      mockError,
+		updateReturn:      errMock,
 	}
 	mockEnv = newMockEnv(nil, clusterRepo, nil)
 	mockEnv.clusterArticleWithSubject(newArticle, subject)
@@ -166,7 +166,7 @@ func TestClusterArticle(t *testing.T) {
 	// Mocking
 	articleRepo := &mockArticleRepo{
 		articleSubjects:        nil,
-		findArticleSubjectsErr: mockError,
+		findArticleSubjectsErr: errMock,
 	}
 
 	mockEnv := newMockEnv(articleRepo, nil, nil)
@@ -202,7 +202,7 @@ func TestClusterArticle(t *testing.T) {
 	}
 	clusterRepo := &mockClusterRepo{
 		findByHashCluster: emptyCluster,
-		findByHashErr:     mockError,
+		findByHashErr:     errMock,
 	}
 	mockEnv = newMockEnv(articleRepo, clusterRepo, nil)
 
