@@ -7,4 +7,4 @@ COPY . .
 # Install dependencies
 RUN dep ensure
 
-CMD ["sh", "run-tests.sh"]
+CMD ["bash", "run-tests.sh"]
