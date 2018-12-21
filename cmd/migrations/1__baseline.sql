@@ -15,16 +15,16 @@ CREATE TABLE twitter_references (
   id VARCHAR(50) PRIMARY KEY,
   twitter_author VARCHAR(50),
   follower_count INT,
-  article_id REFERENCES article(id),
+  article_id VARCHAR(50) REFERENCES article(id),
   UNIQUE (twitter_author, article_id)
-)
+);
 
 CREATE TABLE subject (
   id VARCHAR(50) PRIMARY KEY,
   symbol VARCHAR(15),
   name VARCHAR(50),
   score NUMERIC(9,5) NOT NULL,
-  article_id REFERENCES article(id),
+  article_id VARCHAR(50) REFERENCES article(id),
   UNIQUE (symbol, article_id)
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE article_cluster (
   symbol VARCHAR(15),
   article_date DATE,
   score NUMERIC(9,5),
-  lead_article_id VARCHAR(50) REFERENCES article(id),
+  lead_article_id VARCHAR(50) REFERENCES article(id)
 );
 
 CREATE TABLE cluster_member (
