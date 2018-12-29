@@ -10,14 +10,6 @@
   version = "1.0"
 
 [[projects]]
-  digest = "1:a571648c5f1a3f20fa405d1cf924b941c5bb236ea6d0565a63c0994e38dd8f82"
-  name = "github.com/caarlos0/env"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "518fcfb943252f77846f92ce5794086d9cb4a1b5"
-  version = "v3.5.0"
-
-[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -26,7 +18,7 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:fe1d49a952436f925e25b95d03776edd952b2609b746e561b8742a610a4abd90"
+  digest = "1:c1dd9fc322672a2c44aacc2b19ddce2544a05d635853941138e0d9c11db4c934"
   name = "github.com/mimir-news/pkg"
   packages = [
     "dbutil",
@@ -36,8 +28,7 @@
     "schema/news",
   ]
   pruneopts = "UT"
-  revision = "6d1fc373af0fd1ab3f338d0d1c835d9e72d84cca"
-  version = "0.4"
+  revision = "52837d874a93e6bf7d167dea8c64a2cf7e6c2cd4"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -95,7 +86,6 @@
   analyzer-version = 1
   input-imports = [
     "github.com/CzarSimon/go-file-heartbeat/heartbeat",
-    "github.com/caarlos0/env",
     "github.com/mimir-news/pkg/dbutil",
     "github.com/mimir-news/pkg/id",
     "github.com/mimir-news/pkg/mq",

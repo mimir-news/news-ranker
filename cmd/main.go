@@ -2,8 +2,6 @@ package main
 
 import (
 	"sync"
-
-	"github.com/CzarSimon/go-file-heartbeat/heartbeat"
 )
 
 func main() {
@@ -13,13 +11,9 @@ func main() {
 
 	rankObjectHandler := e.newSubscriptionHandler(e.rankQueue(), e.handleRankObjectMessage)
 	articlesHandler := e.newSubscriptionHandler(e.scrapedQueue(), e.handleScrapedArticleMessage)
-	go emitHeartbeats(conf)
+	go e.healthCheck()
 	go handleSubscription(rankObjectHandler, wg)
 	go handleSubscription(articlesHandler, wg)
 
 	wg.Wait()
-}
-
-func emitHeartbeats(conf config) {
-	heartbeat.RunFileHeartbeat(conf.HearbeatFile, conf.HearbeatInterval)
 }

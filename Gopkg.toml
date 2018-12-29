@@ -34,8 +34,8 @@
   version = "1.2.2"
 
 [[constraint]]
+  revision = "52837d874a93e6bf7d167dea8c64a2cf7e6c2cd4"
   name = "github.com/mimir-news/pkg"
-  version = "0.4"
 
 [[constraint]]
   name = "github.com/CzarSimon/go-file-heartbeat"
