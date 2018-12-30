@@ -29,7 +29,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:c1dd9fc322672a2c44aacc2b19ddce2544a05d635853941138e0d9c11db4c934"
+  digest = "1:9f34075e0b3581646328466bdb3243e8251ed35b09737c1bb7c973a74bf07f61"
   name = "github.com/mimir-news/pkg"
   packages = [
     "dbutil",
@@ -39,7 +39,7 @@
     "schema/news",
   ]
   pruneopts = "UT"
-  revision = "52837d874a93e6bf7d167dea8c64a2cf7e6c2cd4"
+  revision = "3c964d45bd8e9b0bf9557bbdcaf8f2f74e018dc9"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"

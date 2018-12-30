@@ -18,7 +18,7 @@ type env struct {
 }
 
 func setupEnv(conf config) *env {
-	mqClient, err := mq.NewClient(conf.MQConfig())
+	mqClient, err := mq.NewClient(conf.MQConfig(), conf.MQ.HealthTarget)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -2,3 +2,5 @@ vendor
 Jenkinsfile
 .gitignore
 Makefile
+cmd/cmd
+cmd/start.sh

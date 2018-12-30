@@ -1,7 +1,9 @@
 package main
 
 import (
+	"log"
 	"sync"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -9,6 +11,7 @@ import (
 func main() {
 	conf := getConfig()
 	e := setupEnv(conf)
+	defer e.close()
 	wg := &sync.WaitGroup{}
 
 	rankObjectHandler := e.newSubscriptionHandler(e.rankQueue(), e.handleRankObjectMessage)
@@ -17,5 +20,7 @@ func main() {
 	go handleSubscription(rankObjectHandler, wg)
 	go handleSubscription(articlesHandler, wg)
 
+	time.Sleep(initalWaitingTime)
+	log.Println("Started", ServiceName)
 	wg.Wait()
 }

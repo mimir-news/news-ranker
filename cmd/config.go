@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/mimir-news/pkg/dbutil"
 	"github.com/mimir-news/pkg/mq"
@@ -13,6 +14,8 @@ import (
 const (
 	ServiceName = "news-ranker"
 )
+
+const initalWaitingTime = 5 * time.Second
 
 type config struct {
 	MQ               mqConfig
@@ -31,6 +34,7 @@ type mqConfig struct {
 	ScrapeQueue  string
 	ScrapedQueue string
 	RankQueue    string
+	HealthTarget string
 }
 
 func mustGetMQConfig() mqConfig {
@@ -43,6 +47,7 @@ func mustGetMQConfig() mqConfig {
 		ScrapeQueue:  mustGetenv("MQ_SCRAPE_QUEUE"),
 		ScrapedQueue: mustGetenv("MQ_SCRAPED_QUEUE"),
 		RankQueue:    mustGetenv("MQ_RANK_QUEUE"),
+		HealthTarget: mustGetenv("MQ_HEALTH_TARGET"),
 	}
 }
 

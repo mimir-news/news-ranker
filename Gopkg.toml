@@ -34,7 +34,7 @@
   version = "1.2.2"
 
 [[constraint]]
-  revision = "52837d874a93e6bf7d167dea8c64a2cf7e6c2cd4"
+  revision = "3c964d45bd8e9b0bf9557bbdcaf8f2f74e018dc9"
   name = "github.com/mimir-news/pkg"
 
 [[constraint]]

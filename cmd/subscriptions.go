@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"sync"
 
+	"github.com/mimir-news/pkg/id"
 	"github.com/mimir-news/pkg/mq"
 )
 
@@ -26,7 +28,7 @@ func newHandler(queue string, client mq.Client, fn handlerFunc) handler {
 func handleSubscription(h handler, wg *sync.WaitGroup) {
 	wg.Add(1)
 	defer wg.Done()
-	messageChannel, err := h.client.Subscribe(h.queue, ServiceName)
+	messageChannel, err := h.client.Subscribe(h.queue, newConsumerID())
 	if err != nil {
 		log.Println(err)
 		return
@@ -51,4 +53,8 @@ func wrapMessageHandlingResult(msg mq.Message, err error) {
 			log.Println(ackErr)
 		}
 	}
+}
+
+func newConsumerID() string {
+	return fmt.Sprintf("%s-%s", ServiceName, id.New())
 }
