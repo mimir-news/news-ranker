@@ -40,3 +40,7 @@
 [[constraint]]
   name = "github.com/CzarSimon/go-file-heartbeat"
   version = "1.0.0"
+
+[[constraint]]
+  name = "github.com/lib/pq"
+  version = "1.0.0"

@@ -18,6 +18,17 @@
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:8ef506fc2bb9ced9b151dafa592d4046063d744c646c1bbe801982ce87e4bc24"
+  name = "github.com/lib/pq"
+  packages = [
+    ".",
+    "oid",
+  ]
+  pruneopts = "UT"
+  revision = "4ded0e9383f75c197b3a2aaa6d590ac52df6fd79"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:c1dd9fc322672a2c44aacc2b19ddce2544a05d635853941138e0d9c11db4c934"
   name = "github.com/mimir-news/pkg"
   packages = [
@@ -86,6 +97,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/CzarSimon/go-file-heartbeat/heartbeat",
+    "github.com/lib/pq",
     "github.com/mimir-news/pkg/dbutil",
     "github.com/mimir-news/pkg/id",
     "github.com/mimir-news/pkg/mq",

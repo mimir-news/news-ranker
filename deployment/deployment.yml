@@ -12,56 +12,59 @@ spec:
         app: news-ranker
     spec:
       containers:
-      - name: news-ranker
-        image: eu.gcr.io/mimir-185212/news-ranker:2.0
-        env:
-        - name: DB_HOST
-          value: mimir-db
-        - name: DB_PORT
-          value: "5432"
-        - name: DB_NAME
-          value: newsranker
-        - name: DB_USERNAME
-          value: newsranker
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: newsranker.password
-        - name: TWITTER_USERS
-          value: "320000000"
-        - name: MQ_EXCHANGE
-          value: x-news
-        - name: MQ_RANK_QUEUE
-          value: q-rank-objects
-        - name: MQ_SCRAPE_QUEUE
-          value: q-scrape-targets
-        - name: MQ_SCRAPED_QUEUE
-          value: q-scraped-articles
-        - name: MQ_HOST
-          value: message-queue
-        - name: MQ_PORT
-          value: "5672"
-        - name: MQ_USER
-          value: newsranker
-        - name: MQ_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mq-credentials
-              key: newsranker.password
-        - name: HEARTBEAT_FILE
-          value: "/tmp/news-ranker-health.txt"
-        - name: HEARTBEAT_INTERVAL
-          value: "20"
-        readinessProbe:
-          exec:
-            command:
-            - test
-            - '`find /tmp/news-ranker-health.txt -mmin 1`'
-          initialDelaySeconds: 40
-        livenessProbe:
-          exec:
-            command:
-            - test
-            - '`find /tmp/news-ranker-health.txt -mmin 1`'
-          initialDelaySeconds: 60
+        - name: news-ranker
+          image: eu.gcr.io/mimir-185212/news-ranker:2.0
+          env:
+            - name: DB_HOST
+              value: mimir-db
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: newsranker
+            - name: DB_USERNAME
+              value: newsranker
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: newsranker.password
+            - name: TWITTER_USERS
+              value: "320000000"
+            - name: MQ_EXCHANGE
+              value: x-news
+            - name: MQ_RANK_QUEUE
+              value: q-rank-objects
+            - name: MQ_SCRAPE_QUEUE
+              value: q-scrape-targets
+            - name: MQ_SCRAPED_QUEUE
+              value: q-scraped-articles
+            - name: MQ_HOST
+              value: message-queue
+            - name: MQ_PORT
+              value: "5672"
+            - name: MQ_USER
+              value: newsranker
+            - name: MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mq-credentials
+                  key: newsranker.password
+            - name: HEARTBEAT_FILE
+              value: "/tmp/news-ranker-health.txt"
+            - name: HEARTBEAT_INTERVAL
+              value: "20"
+          readinessProbe:
+            exec:
+              command:
+                - test
+                - '`find /tmp/news-ranker-health.txt -mmin 1`'
+            initialDelaySeconds: 40
+          livenessProbe:
+            exec:
+              command:
+                - test
+                - '`find /tmp/news-ranker-health.txt -mmin 1`'
+            initialDelaySeconds: 60
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: gcr-json-key

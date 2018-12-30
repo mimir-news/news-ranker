@@ -2,6 +2,8 @@ package main
 
 import (
 	"sync"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
