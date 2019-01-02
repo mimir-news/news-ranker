@@ -36,13 +36,13 @@ func handleSubscription(h handler, wg *sync.WaitGroup) {
 
 	for msg := range messageChannel {
 		err = h.fn(msg)
-		wrapMessageHandlingResult(msg, err)
+		wrapMessageHandlingResult(msg, err, h.queue)
 	}
 }
 
-func wrapMessageHandlingResult(msg mq.Message, err error) {
+func wrapMessageHandlingResult(msg mq.Message, err error, queueName string) {
 	if err != nil {
-		log.Println(err)
+		log.Println("ERROR -", "queue:", queueName, "error:", err)
 		rejectErr := msg.Reject()
 		if rejectErr != nil {
 			log.Println(rejectErr)
