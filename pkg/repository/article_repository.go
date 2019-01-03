@@ -49,9 +49,9 @@ const findArticleByURLQuery = `SELECT
 
 func (r *pgArticleRepo) FindByURL(url string) (news.Article, error) {
 	var a news.Article
-	var joinedKeywords string
+	var joinedKeywords sql.NullString
 	err := r.db.QueryRow(findArticleByURLQuery, url).Scan(
-		&a.ID, &a.URL, &a.Title, &a.Body, joinedKeywords,
+		&a.ID, &a.URL, &a.Title, &a.Body, &joinedKeywords,
 		&a.ReferenceScore, &a.ArticleDate, &a.CreatedAt)
 	if err == sql.ErrNoRows {
 		return a, ErrNoSuchArticle
@@ -231,10 +231,21 @@ func (r *pgArticleRepo) upsertSubjects(subjects []news.Subject, tx *sql.Tx) erro
 	return nil
 }
 
-func joinKeywords(keywords []string) string {
-	return strings.Join(keywords, keywordDelimiter)
+func joinKeywords(keywords []string) sql.NullString {
+	if keywords == nil {
+		return sql.NullString{}
+	}
+
+	return sql.NullString{
+		Valid:  true,
+		String: strings.Join(keywords, keywordDelimiter),
+	}
 }
 
-func splitKeywords(joinedKeywords string) []string {
-	return strings.Split(joinedKeywords, keywordDelimiter)
+func splitKeywords(keywords sql.NullString) []string {
+	if !keywords.Valid {
+		return make([]string, 0)
+	}
+
+	return strings.Split(keywords.String, keywordDelimiter)
 }
