@@ -5,6 +5,7 @@ import (
 
 	"github.com/mimir-news/news-ranker/pkg/domain"
 	"github.com/mimir-news/news-ranker/pkg/repository"
+	"github.com/mimir-news/pkg/id"
 	"github.com/mimir-news/pkg/mq"
 	"github.com/mimir-news/pkg/schema/news"
 )
@@ -53,7 +54,7 @@ func (e *env) rankExistingArticle(article news.Article, rankObject news.RankObje
 }
 
 func (e *env) rankWithNewReferences(update domain.ArticleUpdate) {
-	newRefScore := calcReferenceScore(e.config.TwitterUsers, update.Referers...)
+	newRefScore := calcReferenceScore(e.config.TwitterUsers, e.config.ReferenceWeight, update.Referers...)
 	update.Article.ReferenceScore = newRefScore
 
 	err := e.articleRepo.Update(update.Article)
@@ -100,19 +101,33 @@ func parseRankObject(msg mq.Message) (news.RankObject, error) {
 	return ro, err
 }
 
-func calcReferenceScore(twitterUsers int64, references ...news.Referer) float64 {
+func calcReferenceScore(twitterUsers, referenceWeight float64, references ...news.Referer) float64 {
 	var totalReferences int64
 	for _, reference := range references {
 		totalReferences += reference.FollowerCount
 	}
-	return float64(totalReferences) / float64(twitterUsers)
+	return float64(totalReferences) * referenceWeight / twitterUsers
 }
 
 func newScrapeTarget(article news.Article, ro news.RankObject) news.ScrapeTarget {
-	return news.ScrapeTarget{
+	target := news.ScrapeTarget{
 		URL:       article.URL,
 		Subjects:  ro.Subjects,
 		ArticleID: article.ID,
 		Referer:   ro.Referer,
 	}
+
+	target.Referer.ArticleID = article.ID
+	if ro.Referer.ID == "" {
+		target.Referer.ID = id.New()
+	}
+
+	for i := 0; i < len(target.Subjects); i++ {
+		target.Subjects[i].ArticleID = article.ID
+		if target.Subjects[i].ID == "" {
+			target.Subjects[i].ID = id.New()
+		}
+	}
+
+	return target
 }

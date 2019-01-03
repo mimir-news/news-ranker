@@ -30,7 +30,7 @@ func (e *env) updateAndStoreScrapedArticle(scrapedArticle news.ScrapedArticle) (
 	}
 
 	mergedReferers := mergeReferers(referers, scrapedArticle.Referer)
-	referenceScore := calcReferenceScore(e.config.TwitterUsers, mergedReferers...)
+	referenceScore := calcReferenceScore(e.config.TwitterUsers, e.config.ReferenceWeight, mergedReferers...)
 	scrapedArticle.Article.ReferenceScore = referenceScore
 
 	err = e.articleRepo.SaveScrapedArticle(scrapedArticle)

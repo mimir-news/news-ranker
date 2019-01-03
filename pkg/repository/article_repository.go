@@ -14,6 +14,7 @@ const (
 	keywordDelimiter = ","
 )
 
+// Common article repository errors.
 var (
 	ErrNoSuchArticle = errors.New("No such article")
 	ErrNoSubjects    = errors.New("No subjects found")
@@ -21,6 +22,7 @@ var (
 	ErrFailedInsert  = errors.New("Insert failed")
 )
 
+// ArticleRepo data access interface for articles.
 type ArticleRepo interface {
 	FindByURL(url string) (news.Article, error)
 	FindArticleSubjects(articleID string) ([]news.Subject, error)
@@ -34,6 +36,7 @@ type pgArticleRepo struct {
 	db *sql.DB
 }
 
+// NewArticleRepo creates a new ArticleRepo using the default implementation.
 func NewArticleRepo(db *sql.DB) ArticleRepo {
 	return &pgArticleRepo{
 		db: db,
@@ -60,7 +63,7 @@ func (r *pgArticleRepo) FindByURL(url string) (news.Article, error) {
 }
 
 const findArticleSubjectsQuery = `
-  SELECT id, symbol, name, score, article_id FROM subject_score
+  SELECT id, symbol, name, score, article_id FROM subject
   WHERE article_id = $1`
 
 func (r *pgArticleRepo) FindArticleSubjects(articleID string) ([]news.Subject, error) {
@@ -174,8 +177,9 @@ func (r *pgArticleRepo) SaveScrapedArticle(scrapedArticle news.ScrapedArticle) e
 const upsertArticleQuery = `
   INSERT INTO
   article(id, url, title, body, keywords, reference_score, article_date, created_at)
-  VALEUS ($1, $2, $3, $4, $5, $6, $7, $8)
-  ON CONFLICT UPDATE reference_score = $6`
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  ON CONFLICT ON CONSTRAINT article_pkey
+  DO UPDATE SET reference_score = $6`
 
 func (r *pgArticleRepo) upsertArticle(article news.Article, tx *sql.Tx) error {
 	keywords := joinKeywords(article.Keywords)
@@ -193,7 +197,7 @@ func (r *pgArticleRepo) upsertArticle(article news.Article, tx *sql.Tx) error {
 const insertReferencesIgnoreConflictsQuery = `
   INSERT INTO twitter_references(id, twitter_author, follower_count, article_id)
   VALUES ($1, $2, $3, $4)
-  ON CONFLICT DO NOTHING`
+  ON CONFLICT ON CONSTRAINT twitter_references_pkey DO NOTHING`
 
 func (r *pgArticleRepo) insertReferer(referer news.Referer, tx *sql.Tx) error {
 	_, err := r.db.Exec(
@@ -209,7 +213,7 @@ func (r *pgArticleRepo) insertReferer(referer news.Referer, tx *sql.Tx) error {
 const upsertSubjectQuery = `
   INSERT INTO subject(id, symbol, name, score, article_id)
   VALUES ($1, $2, $3, $4, $5)
-  ON CONFLICT UPDATE score = $4`
+  ON CONFLICT ON CONSTRAINT subject_pkey DO UPDATE SET score = $4`
 
 func (r *pgArticleRepo) upsertSubjects(subjects []news.Subject, tx *sql.Tx) error {
 	stmt, err := tx.Prepare(upsertSubjectQuery)

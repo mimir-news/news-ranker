@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mimir-news/pkg/id"
+
 	"github.com/mimir-news/news-ranker/pkg/repository"
 	"github.com/mimir-news/pkg/mq/mqtest"
 	"github.com/mimir-news/pkg/schema/news"
@@ -29,13 +31,16 @@ func TestParseRankObject(t *testing.T) {
 func TestNewScrapeTarget(t *testing.T) {
 	assert := assert.New(t)
 
-	ro := getTestRankObject()
 	article := news.Article{
 		ID:    "a-0",
 		URL:   "http://url.0",
 		Title: "title",
 		Body:  "body",
 	}
+
+	ro := getTestRankObject()
+	ro.Referer.ArticleID = article.ID
+	ro.Referer.ID = id.New()
 
 	scrapeTarget := newScrapeTarget(article, ro)
 	assert.Equal(article.ID, scrapeTarget.ArticleID)
@@ -270,7 +275,8 @@ func TestHandleRankObjectMessage_ExistingArticleNewReferers(t *testing.T) {
 				Exchange:    "mq-exchange",
 				ScrapeQueue: "scrape-queue",
 			},
-			TwitterUsers: 2000,
+			TwitterUsers:    2000,
+			ReferenceWeight: 1.0,
 		},
 		mqClient:    mqtest.NewSuccessMockClient(nil),
 		articleRepo: articleRepo,

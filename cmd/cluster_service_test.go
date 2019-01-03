@@ -242,7 +242,8 @@ func newMockEnv(
 	mqClient mq.Client) *env {
 	return &env{
 		config: config{
-			TwitterUsers: 1000,
+			TwitterUsers:    1000,
+			ReferenceWeight: 1.0,
 			MQ: mqConfig{
 				Exchange:     "x-news",
 				ScrapeQueue:  "q-scrape-targets",

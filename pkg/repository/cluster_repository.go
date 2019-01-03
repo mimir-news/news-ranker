@@ -3,17 +3,18 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"log"
 
 	"github.com/mimir-news/news-ranker/pkg/domain"
 	"github.com/mimir-news/pkg/dbutil"
 )
 
+// Common cluster repository errors.
 var (
-	ErrNoSuchCluster = errors.New("No such article")
+	ErrNoSuchCluster = errors.New("no such cluster")
 	ErrUpdateFailed  = errors.New("Update failed")
 )
 
+// ClusterRepo data access interface for article clusters.
 type ClusterRepo interface {
 	FindByHash(clusterHash string) (domain.ArticleCluster, error)
 	Save(cluster domain.ArticleCluster) error
@@ -24,6 +25,7 @@ type pgClusterRepo struct {
 	db *sql.DB
 }
 
+// NewClusterRepo creates a new ClusterRepo using the default implementation.
 func NewClusterRepo(db *sql.DB) ClusterRepo {
 	return &pgClusterRepo{
 		db: db,
@@ -161,7 +163,6 @@ func saveCluster(cluster domain.ArticleCluster, tx *sql.Tx) error {
 		saveClusterQuery, cluster.Hash, cluster.Title, cluster.Symbol,
 		cluster.ArticleDate, cluster.Score, cluster.LeadArticleID)
 	if err != nil {
-		log.Println(err)
 		return ErrFailedInsert
 	}
 
@@ -172,7 +173,8 @@ const upsertClusterMembersQuery = `
   INSERT INTO cluster_member(
     id, reference_score, subject_score, cluster_hash, article_id
   ) VALUES ($1, $2, $3, $4, $5)
-  ON CONFLICT UPDATE reference_score = $2, subject_score = $3`
+  ON CONFLICT ON CONSTRAINT cluster_member_pkey 
+  DO UPDATE SET reference_score = $2, subject_score = $3`
 
 func upsertClusterMembers(members []domain.ClusterMember, tx *sql.Tx) error {
 	stmt, err := tx.Prepare(upsertClusterMembersQuery)

@@ -30,6 +30,8 @@ spec:
                   key: newsranker.password
             - name: TWITTER_USERS
               value: "320000000"
+            - name: REFERENCE_WEIGHT
+              value: "1000"
             - name: MQ_EXCHANGE
               value: x-news
             - name: MQ_RANK_QUEUE

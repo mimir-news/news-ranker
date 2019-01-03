@@ -39,7 +39,7 @@ func TestHandleScrapedArticleMessage_Success(t *testing.T) {
 		findArticleSubjectsErr: errMock,
 	}
 	mockEnv := &env{
-		config:      config{TwitterUsers: 6000},
+		config:      config{TwitterUsers: 12000, ReferenceWeight: 2.0},
 		articleRepo: articleRepo,
 	}
 
@@ -70,7 +70,7 @@ func TestHandleScrapedArticleMessage_FailedDBInteractions(t *testing.T) {
 	}
 
 	mockEnv := &env{
-		config:      config{TwitterUsers: 2000},
+		config:      config{TwitterUsers: 6000, ReferenceWeight: 3.0},
 		articleRepo: articleRepoNoReferers,
 	}
 

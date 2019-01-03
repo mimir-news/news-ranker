@@ -20,7 +20,8 @@ const initalWaitingTime = 5 * time.Second
 type config struct {
 	MQ               mqConfig
 	DB               dbutil.Config
-	TwitterUsers     int64
+	TwitterUsers     float64
+	ReferenceWeight  float64
 	HearbeatFile     string
 	HearbeatInterval int
 }
@@ -52,12 +53,6 @@ func mustGetMQConfig() mqConfig {
 }
 
 func getConfig() config {
-	twitterUsersStr := getenv("TWITTER_USERS", "320000000")
-	twitterUsers, err := strconv.ParseInt(twitterUsersStr, 10, 64)
-	if err != nil {
-		log.Fatalln("TWITTER_USERS parsing failed", err)
-	}
-
 	interval, err := strconv.Atoi(getenv("HEARTBEAT_INTERVAL", "20"))
 	if err != nil {
 		log.Fatalln("HEARTBEAT_INTERVAL parsing failed", err)
@@ -66,7 +61,8 @@ func getConfig() config {
 	return config{
 		MQ:               mustGetMQConfig(),
 		DB:               dbutil.MustGetConfig("DB"),
-		TwitterUsers:     twitterUsers,
+		TwitterUsers:     getTwitterUsers(),
+		ReferenceWeight:  getReferenceWeight(),
 		HearbeatFile:     mustGetenv("HEARTBEAT_FILE"),
 		HearbeatInterval: interval,
 	}
@@ -74,6 +70,26 @@ func getConfig() config {
 
 func (c config) MQConfig() mq.Config {
 	return mq.NewConfig(c.MQ.Host, c.MQ.Port, c.MQ.User, c.MQ.Password)
+}
+
+func getTwitterUsers() float64 {
+	twitterUsersStr := getenv("TWITTER_USERS", "320000000")
+	twitterUsers, err := strconv.ParseFloat(twitterUsersStr, 64)
+	if err != nil {
+		log.Fatalln("TWITTER_USERS parsing failed", err)
+	}
+
+	return twitterUsers
+}
+
+func getReferenceWeight() float64 {
+	weightStr := getenv("REFERENCE_WEIGHT", "1000")
+	weight, err := strconv.ParseFloat(weightStr, 64)
+	if err != nil {
+		log.Fatalln("REFERENCE_WEIGHT parsing failed", err)
+	}
+
+	return weight
 }
 
 func mustGetenv(key string) string {
