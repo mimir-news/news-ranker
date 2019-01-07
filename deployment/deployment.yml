@@ -16,7 +16,7 @@ spec:
           image: eu.gcr.io/mimir-185212/news-ranker:2.0
           env:
             - name: DB_HOST
-              value: mimir-db
+              value: db-pooler
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
