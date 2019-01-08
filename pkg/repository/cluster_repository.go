@@ -177,14 +177,8 @@ const upsertClusterMembersQuery = `
   DO UPDATE SET reference_score = $2, subject_score = $3`
 
 func upsertClusterMembers(members []domain.ClusterMember, tx *sql.Tx) error {
-	stmt, err := tx.Prepare(upsertClusterMembersQuery)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-
 	for _, m := range members {
-		res, err := stmt.Exec(m.ID, m.ReferenceScore, m.SubjectScore, m.ClusterHash, m.ArticleID)
+		res, err := tx.Exec(upsertClusterMembersQuery, m.ID, m.ReferenceScore, m.SubjectScore, m.ClusterHash, m.ArticleID)
 		if err != nil {
 			return err
 		}

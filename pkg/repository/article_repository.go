@@ -216,14 +216,8 @@ const upsertSubjectQuery = `
   ON CONFLICT ON CONSTRAINT subject_pkey DO UPDATE SET score = $4`
 
 func (r *pgArticleRepo) upsertSubjects(subjects []news.Subject, tx *sql.Tx) error {
-	stmt, err := tx.Prepare(upsertSubjectQuery)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-
 	for _, s := range subjects {
-		_, err = stmt.Exec(s.ID, s.Symbol, s.Name, s.Score, s.ArticleID)
+		_, err := tx.Exec(upsertSubjectQuery, s.ID, s.Symbol, s.Name, s.Score, s.ArticleID)
 		if err != nil {
 			return err
 		}
