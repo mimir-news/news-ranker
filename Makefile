@@ -10,3 +10,6 @@ build:
 
 build-test:
 	docker build -t "$(NAME)-test" -f Dockerfile.test .
+
+deploy:
+	kubectl apply -f deployment/
