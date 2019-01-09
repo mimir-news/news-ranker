@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"time"
 
 	"github.com/CzarSimon/go-file-heartbeat/heartbeat"
@@ -13,15 +12,16 @@ func (e *env) healthCheck() {
 		sleep(e.config.HearbeatInterval)
 		err := dbutil.IsConnected(e.db)
 		if err != nil {
-			log.Println("ERROR -", err)
+			logger.Errorw("health check failed", "reason", "DB not connected", "err", err)
 			continue
 		}
 
 		if !e.mqClient.Connected() {
-			log.Println("ERROR - MQ disconnected")
+			logger.Errorw("health check failed", "reason", "MQ disconnected")
 			continue
 		}
 
+		logger.Debug("health check OK")
 		heartbeat.EmitToFile(e.config.HearbeatFile)
 	}
 

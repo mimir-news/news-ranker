@@ -73,7 +73,7 @@ func TestHandleRankObjectMessage_NewArticle(t *testing.T) {
 		articleRepo: articleRepo,
 	}
 
-	err := mockEnv.handleRankObjectMessage(message)
+	err := mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(articleURL, articleRepo.findByURLArg)
 
@@ -83,7 +83,7 @@ func TestHandleRankObjectMessage_NewArticle(t *testing.T) {
 
 	mockEnv.mqClient = mqtest.NewMockClient(nil, false, true, false)
 
-	err = mockEnv.handleRankObjectMessage(message)
+	err = mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(articleURL, articleRepo.findByURLArg)
 
@@ -97,7 +97,7 @@ func TestHandleRankObjectMessage_NewArticle(t *testing.T) {
 	mockEnv.articleRepo = failingRepo
 	mockEnv.mqClient = mqtest.NewSuccessMockClient(nil)
 
-	err = mockEnv.handleRankObjectMessage(message)
+	err = mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(articleURL, articleRepo.findByURLArg)
 
@@ -162,7 +162,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewSubjects(t *testing.T) {
 		articleRepo: articleRepo,
 	}
 
-	err := mockEnv.handleRankObjectMessage(message)
+	err := mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(articleURL, articleRepo.findByURLArg)
 	assert.Equal(article.ID, articleRepo.findArticleSubjectsArg)
@@ -184,7 +184,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewSubjects(t *testing.T) {
 	}
 	mockEnv.articleRepo = articleRepo
 
-	err = mockEnv.handleRankObjectMessage(message)
+	err = mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(articleURL, articleRepo.findByURLArg)
 	assert.Equal(article.ID, articleRepo.findArticleSubjectsArg)
@@ -206,7 +206,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewSubjects(t *testing.T) {
 	}
 	mockEnv.articleRepo = articleRepo
 
-	err = mockEnv.handleRankObjectMessage(message)
+	err = mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(articleURL, articleRepo.findByURLArg)
 	assert.Equal(article.ID, articleRepo.findArticleSubjectsArg)
@@ -283,7 +283,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewReferers(t *testing.T) {
 		clusterRepo: &mockClusterRepo{},
 	}
 
-	err := mockEnv.handleRankObjectMessage(message)
+	err := mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(articleURL, articleRepo.findByURLArg)
 	assert.Equal(article.ID, articleRepo.findArticleSubjectsArg)
@@ -308,7 +308,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewReferers(t *testing.T) {
 	}
 	mockEnv.articleRepo = articleRepo
 
-	err = mockEnv.handleRankObjectMessage(message)
+	err = mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 
 	// Checks that an only new reference update was not initated.
@@ -329,7 +329,7 @@ func TestHandleRankObjectMessage_ExistingArticleNewReferers(t *testing.T) {
 	}
 	mockEnv.articleRepo = articleRepo
 
-	err = mockEnv.handleRankObjectMessage(message)
+	err = mockEnv.handleRankObjectMessage(message, id.New())
 	assert.Nil(err)
 
 	// Checks that an only new reference update was not initated.

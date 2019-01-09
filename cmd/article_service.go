@@ -1,21 +1,21 @@
 package main
 
 import (
-	"log"
-
 	"github.com/mimir-news/pkg/mq"
 	"github.com/mimir-news/pkg/schema/news"
 )
 
-func (e *env) handleScrapedArticleMessage(msg mq.Message) error {
+func (e *env) handleScrapedArticleMessage(msg mq.Message, msgID string) error {
+	logger.Infow("Incomming ScrapedArticle", "msgID", msgID)
 	scrapedArticle, err := parseScrapedArticle(msg)
 	if err != nil {
+		logger.Errorw("Parsing ScrapedArticle failed", "msgID", msgID, "err", err)
 		return err
 	}
 
 	article, err := e.updateAndStoreScrapedArticle(scrapedArticle)
 	if err != nil {
-		log.Println(err)
+		logger.Errorw("Failed to store scraped article", "msgID", msgID, "err", err)
 		return nil
 	}
 

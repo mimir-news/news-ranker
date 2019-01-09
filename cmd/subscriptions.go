@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"sync"
 
 	"github.com/mimir-news/pkg/id"
 	"github.com/mimir-news/pkg/mq"
 )
 
-type handlerFunc func(msg mq.Message) error
+type handlerFunc func(msg mq.Message, messageId string) error
 
 type handler struct {
 	queue  string
@@ -28,29 +27,31 @@ func newHandler(queue string, client mq.Client, fn handlerFunc) handler {
 func handleSubscription(h handler, wg *sync.WaitGroup) {
 	wg.Add(1)
 	defer wg.Done()
-	messageChannel, err := h.client.Subscribe(h.queue, newConsumerID())
+	consumerID := newConsumerID()
+	logger.Infow("Starting subscription", "queue", h.queue, "consumerId", consumerID)
+	messageChannel, err := h.client.Subscribe(h.queue, consumerID)
 	if err != nil {
-		log.Println(err)
+		logger.Errorw("Channel subscription failed", "queue", h.queue, "error", err)
 		return
 	}
 
 	for msg := range messageChannel {
-		err = h.fn(msg)
+		err = h.fn(msg, id.New())
 		wrapMessageHandlingResult(msg, err, h.queue)
 	}
 }
 
 func wrapMessageHandlingResult(msg mq.Message, err error, queueName string) {
 	if err != nil {
-		log.Println("ERROR -", "queue:", queueName, "error:", err)
+		logger.Errorw("Channel subscription failed", "queue", queueName, "error", err)
 		rejectErr := msg.Reject()
 		if rejectErr != nil {
-			log.Println(rejectErr)
+			logger.Errorw("Reject failed", "queue", queueName, "error", rejectErr)
 		}
 	} else {
 		ackErr := msg.Ack()
 		if ackErr != nil {
-			log.Println(ackErr)
+			logger.Errorw("Ack failed", "queue", queueName, "error", ackErr)
 		}
 	}
 }

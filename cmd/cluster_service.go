@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/mimir-news/news-ranker/pkg/domain"
 	"github.com/mimir-news/news-ranker/pkg/repository"
 	"github.com/mimir-news/pkg/schema/news"
@@ -11,7 +9,7 @@ import (
 func (e *env) clusterArticle(article news.Article) {
 	subjects, err := e.articleRepo.FindArticleSubjects(article.ID)
 	if err != nil && err != repository.ErrNoSubjects {
-		log.Println(err)
+		logger.Errorw("Failed retrieving subjects", "articleId", article.ID, "err", err)
 		return
 	}
 
@@ -27,9 +25,8 @@ func (e *env) clusterArticleWithSubject(article news.Article, subject news.Subje
 	if err == repository.ErrNoSuchCluster {
 		e.createNewCluster(clusterHash, article, subject)
 		return
-	}
-	if err != nil {
-		log.Println(err)
+	} else if err != nil {
+		logger.Errorw("Failed retrieving cluster", "clusterHash", clusterHash, "err", err)
 		return
 	}
 
@@ -45,7 +42,10 @@ func (e *env) createNewCluster(clusterHash string, article news.Article, subject
 
 	err := e.clusterRepo.Save(*cluster)
 	if err != nil {
-		log.Println(err)
+		logger.Errorw("Failed store cluster",
+			"clusterHash", cluster.Hash,
+			"articleId", article.ID,
+			"err", err)
 	}
 }
 
@@ -55,7 +55,10 @@ func (e *env) updateArticleCluster(cluster domain.ArticleCluster, article news.A
 
 	err := e.clusterRepo.Update(cluster)
 	if err != nil {
-		log.Println(err)
+		logger.Errorw("Failed to update cluster",
+			"clusterHash", cluster.Hash,
+			"articleId", article.ID,
+			"err", err)
 	}
 }
 

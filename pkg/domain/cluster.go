@@ -27,7 +27,7 @@ type ArticleCluster struct {
 func (a *ArticleCluster) AddMember(newMember ClusterMember) {
 	for _, member := range a.Members {
 		if member.ArticleID == newMember.ArticleID {
-			log.Printf("Member=[%s] already present in cluster=[%s]\n", newMember.String(), a.String())
+			log.Printf("Article=[%s] already in cluster=[%s]\n", newMember.ArticleID, a.Hash)
 			return
 		}
 	}
@@ -62,14 +62,15 @@ func sumReferenceScore(members []ClusterMember) float64 {
 	return referenceSum
 }
 
-func NewArticleCluster(title, symbol string, articleDate time.Time, leadArticleId string,
+// NewArticleCluster creates a new article cluster.
+func NewArticleCluster(title, symbol string, articleDate time.Time, leadArticleID string,
 	score float64, members []ClusterMember) *ArticleCluster {
 	return &ArticleCluster{
 		Hash:          CalcClusterHash(title, symbol, articleDate),
 		Title:         title,
 		Symbol:        symbol,
 		ArticleDate:   articleDate,
-		LeadArticleID: leadArticleId,
+		LeadArticleID: leadArticleID,
 		Score:         score,
 		Members:       members,
 	}
@@ -84,10 +85,11 @@ func CalcClusterHash(title, symbol string, date time.Time) string {
 	return fmt.Sprintf("%x", byteHash)
 }
 
-func (c *ArticleCluster) String() string {
+// String returns a string representation of an article cluster.
+func (a *ArticleCluster) String() string {
 	return fmt.Sprintf(
 		"ArticleCluster(hash=%s title=%s symbol=%s articleDate=%s leadArticleId=%s score=%f)",
-		c.Hash, c.Title, c.Symbol, c.ArticleDate, c.LeadArticleID, c.Score)
+		a.Hash, a.Title, a.Symbol, a.ArticleDate, a.LeadArticleID, a.Score)
 }
 
 // ClusterMember is a scored article that is part of a cluster.
@@ -99,16 +101,18 @@ type ClusterMember struct {
 	SubjectScore   float64
 }
 
-func NewClusterMember(clusterHash, articleId string, referenceScore, subjectScore float64) *ClusterMember {
+// NewClusterMember creates a new ClusterMemeber
+func NewClusterMember(clusterHash, articleID string, referenceScore, subjectScore float64) *ClusterMember {
 	return &ClusterMember{
 		ID:             id.New(),
 		ClusterHash:    clusterHash,
-		ArticleID:      articleId,
+		ArticleID:      articleID,
 		ReferenceScore: referenceScore,
 		SubjectScore:   subjectScore,
 	}
 }
 
+// Score returns the compound score of a cluster member.
 func (m *ClusterMember) Score() float64 {
 	return m.ReferenceScore + m.SubjectScore
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 	"strconv"
 	"time"
@@ -55,7 +54,7 @@ func mustGetMQConfig() mqConfig {
 func getConfig() config {
 	interval, err := strconv.Atoi(getenv("HEARTBEAT_INTERVAL", "20"))
 	if err != nil {
-		log.Fatalln("HEARTBEAT_INTERVAL parsing failed", err)
+		logger.Fatalw("HEARTBEAT_INTERVAL parsing failed", "err", err)
 	}
 
 	return config{
@@ -76,7 +75,7 @@ func getTwitterUsers() float64 {
 	twitterUsersStr := getenv("TWITTER_USERS", "320000000")
 	twitterUsers, err := strconv.ParseFloat(twitterUsersStr, 64)
 	if err != nil {
-		log.Fatalln("TWITTER_USERS parsing failed", err)
+		logger.Fatalw("TWITTER_USERS parsing failed", "err", err)
 	}
 
 	return twitterUsers
@@ -86,7 +85,7 @@ func getReferenceWeight() float64 {
 	weightStr := getenv("REFERENCE_WEIGHT", "1000")
 	weight, err := strconv.ParseFloat(weightStr, 64)
 	if err != nil {
-		log.Fatalln("REFERENCE_WEIGHT parsing failed", err)
+		logger.Fatalw("REFERENCE_WEIGHT parsing failed", "err", err)
 	}
 
 	return weight
@@ -95,7 +94,7 @@ func getReferenceWeight() float64 {
 func mustGetenv(key string) string {
 	val := os.Getenv(key)
 	if val == "" {
-		log.Fatalf("No value for key: %s\n", key)
+		logger.Fatalf("No value for key: %s", key)
 	}
 
 	return val

@@ -5,6 +5,7 @@ import (
 	"github.com/mimir-news/pkg/schema/news"
 )
 
+// Update types.
 const (
 	_ = iota
 	NO_UPDATE

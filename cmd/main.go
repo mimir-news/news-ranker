@@ -6,9 +6,22 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	"go.uber.org/zap"
 )
 
+var logger *zap.SugaredLogger
+
+func init() {
+	l, err := zap.NewProduction()
+	if err != nil {
+		log.Fatal("main.init zap.Logger init failed.", err)
+	}
+
+	logger = l.Sugar()
+}
+
 func main() {
+	defer logger.Sync()
 	conf := getConfig()
 	e := setupEnv(conf)
 	defer e.close()
@@ -21,6 +34,6 @@ func main() {
 	go handleSubscription(articlesHandler, wg)
 
 	time.Sleep(initalWaitingTime)
-	log.Println("Started", ServiceName)
+	logger.Infow("Application started", "name", ServiceName) // log.Println("Started", ServiceName)
 	wg.Wait()
 }

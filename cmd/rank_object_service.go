@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/mimir-news/news-ranker/pkg/domain"
 	"github.com/mimir-news/news-ranker/pkg/repository"
 	"github.com/mimir-news/pkg/id"
@@ -10,22 +8,24 @@ import (
 	"github.com/mimir-news/pkg/schema/news"
 )
 
-func (e *env) handleRankObjectMessage(msg mq.Message) error {
-	rankObject, err := parseRankObject(msg)
+func (e *env) handleRankObjectMessage(msg mq.Message, msgID string) error {
+	logger.Infow("Incomming RankObject", "msgID", msgID)
+	ro, err := parseRankObject(msg)
 	if err != nil {
+		logger.Errorw("Parsing RankObject failed", "msgID", msgID, "err", err)
 		return err
 	}
 
-	for _, URL := range rankObject.URLs {
+	for _, URL := range ro.URLs {
 		article, err := e.articleRepo.FindByURL(URL)
 		if err == repository.ErrNoSuchArticle {
-			e.rankNewArticle(news.NewArticle(URL), rankObject)
+			e.rankNewArticle(news.NewArticle(URL), ro)
 			continue
 		} else if err != nil {
-			log.Println(err)
+			logger.Errorw("Getting article from repository failed", "msgID", msgID, "err", err)
 			continue
 		}
-		e.rankExistingArticle(article, rankObject)
+		e.rankExistingArticle(article, ro)
 	}
 	return nil
 }
@@ -38,7 +38,7 @@ func (e *env) rankNewArticle(article news.Article, rankObject news.RankObject) {
 func (e *env) rankExistingArticle(article news.Article, rankObject news.RankObject) {
 	update, err := e.getArticleUpdate(article, rankObject)
 	if err != nil {
-		log.Println(err)
+		logger.Errorw("Getting article from repository failed", "err", err)
 		return
 	}
 
@@ -48,8 +48,9 @@ func (e *env) rankExistingArticle(article news.Article, rankObject news.RankObje
 	case domain.NEW_REFERENCES:
 		e.rankWithNewReferences(update)
 	default:
-		log.Printf("Taking no action on update type: %d for article: %s\n",
-			update.Type, article.ID)
+		logger.Infow("Taking no action article",
+			"updateType", update.Type,
+			"articleId", article.ID)
 	}
 }
 
@@ -59,13 +60,13 @@ func (e *env) rankWithNewReferences(update domain.ArticleUpdate) {
 
 	err := e.articleRepo.Update(update.Article)
 	if err != nil {
-		log.Println(err)
+		logger.Errorw("Article update failed", "err", err)
 		return
 	}
 
 	err = e.articleRepo.SaveReferer(update.NewReferer)
 	if err != nil {
-		log.Println(err)
+		logger.Errorw("Saving referer failed", "err", err)
 		return
 	}
 
@@ -89,9 +90,10 @@ func (e *env) getArticleUpdate(article news.Article, rankObject news.RankObject)
 }
 
 func (e *env) queueScrapeTarget(scrapeTarget news.ScrapeTarget) {
+	logger.Infow("Sending article for scraping", "articleId", scrapeTarget.ArticleID)
 	err := e.mqClient.Send(scrapeTarget, e.exchange(), e.scrapeQueue())
 	if err != nil {
-		log.Println(err)
+		logger.Errorw("Sending scrape target failed", "articleId", scrapeTarget.ArticleID, "err", err)
 	}
 }
 

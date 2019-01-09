@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mimir-news/pkg/id"
 	"github.com/mimir-news/pkg/mq/mqtest"
 	"github.com/mimir-news/pkg/schema/news"
 	"github.com/stretchr/testify/assert"
@@ -43,7 +44,7 @@ func TestHandleScrapedArticleMessage_Success(t *testing.T) {
 		articleRepo: articleRepo,
 	}
 
-	err := mockEnv.handleScrapedArticleMessage(message)
+	err := mockEnv.handleScrapedArticleMessage(message, id.New())
 	assert.Nil(err)
 
 	assert.Equal(scrapedArticle.Article.ID, articleRepo.findArticleReferersArg)
@@ -53,7 +54,7 @@ func TestHandleScrapedArticleMessage_Success(t *testing.T) {
 func TestHandleScrapedArticleMessage_FailedParse(t *testing.T) {
 	message := mqtest.NewMessage([]byte("will not parse"), false, false)
 	mockEnv := &env{}
-	err := mockEnv.handleScrapedArticleMessage(message)
+	err := mockEnv.handleScrapedArticleMessage(message, id.New())
 	assert.NotNil(t, err)
 }
 
@@ -74,7 +75,7 @@ func TestHandleScrapedArticleMessage_FailedDBInteractions(t *testing.T) {
 		articleRepo: articleRepoNoReferers,
 	}
 
-	err := mockEnv.handleScrapedArticleMessage(message)
+	err := mockEnv.handleScrapedArticleMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(scrapedArticle.Article.ID, articleRepoNoReferers.findArticleReferersArg)
 	assert.Equal("", articleRepoNoReferers.saveScrapedArticleArg.Article.ID)
@@ -96,7 +97,7 @@ func TestHandleScrapedArticleMessage_FailedDBInteractions(t *testing.T) {
 
 	mockEnv.articleRepo = articleRepoFailedSave
 
-	err = mockEnv.handleScrapedArticleMessage(message)
+	err = mockEnv.handleScrapedArticleMessage(message, id.New())
 	assert.Nil(err)
 	assert.Equal(scrapedArticle.Article.ID, articleRepoFailedSave.findArticleReferersArg)
 	assert.Equal(scrapedArticle.Article.ID, articleRepoFailedSave.saveScrapedArticleArg.Article.ID)
