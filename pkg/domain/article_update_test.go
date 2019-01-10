@@ -79,30 +79,30 @@ func TestCreateArticleUpdate(t *testing.T) {
 
 	u1 := CreateArticleUpdate(a, oldSubj, repeatedSubjects, oldRefs, repeatedRef)
 	assertArticleUpdate(t, u1, a, oldSubj, oldRefs)
-	if u1.Type != NO_UPDATE {
+	if u1.Type != NoUpdate {
 		t.Errorf("CreateArticleUpdate failed. Expected type: %d Got: %d",
-			NO_UPDATE, u1.Type)
+			NoUpdate, u1.Type)
 	}
 
 	u2 := CreateArticleUpdate(a, oldSubj, newSubj, oldRefs, repeatedRef)
 	assertArticleUpdate(t, u2, a, mergedSubjects, oldRefs)
-	if u2.Type != NEW_SUBJECTS {
+	if u2.Type != NewSubjects {
 		t.Errorf("CreateArticleUpdate failed. Expected type: %d Got: %d",
-			NEW_SUBJECTS, u2.Type)
+			NewSubjects, u2.Type)
 	}
 
 	u3 := CreateArticleUpdate(a, oldSubj, repeatedSubjects, oldRefs, newRef)
 	assertArticleUpdate(t, u3, a, oldSubj, mergedRefs)
-	if u3.Type != NEW_REFERENCES {
+	if u3.Type != NewReferences {
 		t.Errorf("CreateArticleUpdate failed. Expected type: %d Got: %d",
-			NEW_REFERENCES, u3.Type)
+			NewReferences, u3.Type)
 	}
 
 	u4 := CreateArticleUpdate(a, oldSubj, newSubj, oldRefs, newRef)
 	assertArticleUpdate(t, u4, a, mergedSubjects, mergedRefs)
-	if u4.Type != NEW_SUBJECTS_AND_REFERENCES {
+	if u4.Type != NewSubjectsAndReferences {
 		t.Errorf("CreateArticleUpdate failed. Expected type: %d Got: %d",
-			NEW_SUBJECTS_AND_REFERENCES, u4.Type)
+			NewSubjectsAndReferences, u4.Type)
 	}
 }
 
@@ -152,7 +152,7 @@ func assertArticleUpdate(t *testing.T, u ArticleUpdate, eA news.Article, eS []ne
 func TestToScrapeTarget(t *testing.T) {
 	articleTime, _ := time.Parse("2006-01-02", "2018-10-20")
 	update := ArticleUpdate{
-		Type: NEW_SUBJECTS,
+		Type: NewSubjects,
 		Article: news.Article{
 			ID:    "a-id",
 			URL:   "a-url",

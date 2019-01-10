@@ -17,7 +17,7 @@ func init() {
 		log.Fatal("main.init zap.Logger init failed.", err)
 	}
 
-	logger = l.Sugar()
+	logger = l.Sugar().With("application", ServiceName, "package", "main")
 }
 
 func main() {

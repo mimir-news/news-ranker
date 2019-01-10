@@ -8,10 +8,10 @@ import (
 // Update types.
 const (
 	_ = iota
-	NO_UPDATE
-	NEW_SUBJECTS
-	NEW_REFERENCES
-	NEW_SUBJECTS_AND_REFERENCES
+	NoUpdate
+	NewSubjects
+	NewReferences
+	NewSubjectsAndReferences
 )
 
 // UpdateType describes distinct type of update.
@@ -26,6 +26,7 @@ type ArticleUpdate struct {
 	NewReferer news.Referer
 }
 
+// ToScapeTarget creatas a scrape target from ana article update.
 func (u ArticleUpdate) ToScapeTarget() news.ScrapeTarget {
 	article := u.Article
 	return news.ScrapeTarget{
@@ -108,11 +109,11 @@ func copyRefererWithIDs(referer news.Referer, articleID string) news.Referer {
 
 func dicernUpdateType(hasNewSubjects, hasNewReferers bool) UpdateType {
 	if hasNewSubjects && hasNewReferers {
-		return NEW_SUBJECTS_AND_REFERENCES
+		return NewSubjectsAndReferences
 	} else if hasNewSubjects {
-		return NEW_SUBJECTS
+		return NewSubjects
 	} else if hasNewReferers {
-		return NEW_REFERENCES
+		return NewReferences
 	}
-	return NO_UPDATE
+	return NoUpdate
 }

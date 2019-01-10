@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: news-ranker
-          image: eu.gcr.io/mimir-185212/news-ranker:2.2
+          image: eu.gcr.io/mimir-185212/news-ranker:2.3
           env:
             - name: DB_HOST
               value: db-pooler
@@ -53,6 +53,8 @@ spec:
                 secretKeyRef:
                   name: mq-credentials
                   key: newsranker.password
+            - name: MQ_PREFETCH_COUNT
+              value: "5"
             - name: HEARTBEAT_FILE
               value: "/tmp/news-ranker-health.txt"
             - name: HEARTBEAT_INTERVAL

@@ -8,9 +8,21 @@ import (
 	"time"
 
 	"github.com/mimir-news/pkg/id"
+	"go.uber.org/zap"
 )
 
 const dateFormat = "2006-01-02"
+
+var logger *zap.SugaredLogger
+
+func init() {
+	l, err := zap.NewProduction()
+	if err != nil {
+		log.Fatal("main.init zap.Logger init failed.", err)
+	}
+
+	logger = l.Sugar().With("package", "domain")
+}
 
 // ArticleCluster is a collection of articles.
 type ArticleCluster struct {
@@ -27,7 +39,7 @@ type ArticleCluster struct {
 func (a *ArticleCluster) AddMember(newMember ClusterMember) {
 	for _, member := range a.Members {
 		if member.ArticleID == newMember.ArticleID {
-			log.Printf("Article=[%s] already in cluster=[%s]\n", newMember.ArticleID, a.Hash)
+			logger.Infow("Article already in cluster", "articleId", newMember.ArticleID, "clusterHash", a.Hash)
 			return
 		}
 	}

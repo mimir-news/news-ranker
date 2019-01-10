@@ -26,28 +26,35 @@ type config struct {
 }
 
 type mqConfig struct {
-	Host         string
-	Port         string
-	User         string
-	Password     string
-	Exchange     string
-	ScrapeQueue  string
-	ScrapedQueue string
-	RankQueue    string
-	HealthTarget string
+	Host          string
+	Port          string
+	User          string
+	Password      string
+	Exchange      string
+	ScrapeQueue   string
+	ScrapedQueue  string
+	RankQueue     string
+	HealthTarget  string
+	PrefetchCount int
 }
 
 func mustGetMQConfig() mqConfig {
+	prefetchCount, err := strconv.Atoi(getenv("MQ_PREFETCH_COUNT", "5"))
+	if err != nil {
+		logger.Fatalw("MQ_PREFETCH_COUNT parsing failed", "err", err)
+	}
+
 	return mqConfig{
-		Host:         mustGetenv("MQ_HOST"),
-		Port:         getenv("MQ_PORT", "5672"),
-		User:         mustGetenv("MQ_USER"),
-		Password:     mustGetenv("MQ_PASSWORD"),
-		Exchange:     mustGetenv("MQ_EXCHANGE"),
-		ScrapeQueue:  mustGetenv("MQ_SCRAPE_QUEUE"),
-		ScrapedQueue: mustGetenv("MQ_SCRAPED_QUEUE"),
-		RankQueue:    mustGetenv("MQ_RANK_QUEUE"),
-		HealthTarget: mustGetenv("MQ_HEALTH_TARGET"),
+		Host:          mustGetenv("MQ_HOST"),
+		Port:          getenv("MQ_PORT", "5672"),
+		User:          mustGetenv("MQ_USER"),
+		Password:      mustGetenv("MQ_PASSWORD"),
+		Exchange:      mustGetenv("MQ_EXCHANGE"),
+		ScrapeQueue:   mustGetenv("MQ_SCRAPE_QUEUE"),
+		ScrapedQueue:  mustGetenv("MQ_SCRAPED_QUEUE"),
+		RankQueue:     mustGetenv("MQ_RANK_QUEUE"),
+		HealthTarget:  mustGetenv("MQ_HEALTH_TARGET"),
+		PrefetchCount: prefetchCount,
 	}
 }
 
@@ -68,7 +75,7 @@ func getConfig() config {
 }
 
 func (c config) MQConfig() mq.Config {
-	return mq.NewConfig(c.MQ.Host, c.MQ.Port, c.MQ.User, c.MQ.Password)
+	return mq.NewConfig(c.MQ.Host, c.MQ.Port, c.MQ.User, c.MQ.Password, c.MQ.PrefetchCount)
 }
 
 func getTwitterUsers() float64 {

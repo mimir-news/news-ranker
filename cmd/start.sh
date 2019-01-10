@@ -18,6 +18,7 @@ export MQ_HOST=$DB_HOST
 export MQ_PORT='5672'
 export MQ_USER='newsranker'
 export MQ_PASSWORD='password'
+export MQ_PREFETCH_COUNT='5'
 export HEARTBEAT_FILE='/tmp/news-ranker-health.txt'
 export HEARTBEAT_INTERVAL='20'
 

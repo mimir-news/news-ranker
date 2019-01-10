@@ -43,9 +43,9 @@ func (e *env) rankExistingArticle(article news.Article, rankObject news.RankObje
 	}
 
 	switch update.Type {
-	case domain.NEW_SUBJECTS_AND_REFERENCES, domain.NEW_SUBJECTS:
+	case domain.NewSubjectsAndReferences, domain.NewSubjects:
 		e.queueScrapeTarget(update.ToScapeTarget())
-	case domain.NEW_REFERENCES:
+	case domain.NewReferences:
 		e.rankWithNewReferences(update)
 	default:
 		logger.Infow("Taking no action article",
