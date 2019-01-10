@@ -16,6 +16,7 @@ func (e *env) handleRankObjectMessage(msg mq.Message, msgID string) error {
 		return err
 	}
 
+	failed := 0
 	for _, URL := range ro.URLs {
 		article, err := e.articleRepo.FindByURL(URL)
 		if err == repository.ErrNoSuchArticle {
@@ -23,11 +24,16 @@ func (e *env) handleRankObjectMessage(msg mq.Message, msgID string) error {
 			continue
 		} else if err != nil {
 			logger.Errorw("Getting article from repository failed", "msgID", msgID, "err", err)
+			failed++
 			continue
 		}
 		e.rankExistingArticle(article, ro)
 	}
-	logger.Infow("Success in handling RankObject", "msgID", msgID)
+
+	logger.Infow("RankObject handling done",
+		"msgID", msgID,
+		"succeded", len(ro.URLs)-failed,
+		"failed", failed)
 	return nil
 }
 

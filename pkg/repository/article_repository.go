@@ -53,7 +53,7 @@ func (r *pgArticleRepo) FindByURL(url string) (news.Article, error) {
 		&a.ID, &a.URL, &a.Title, &a.Body, &joinedKeywords,
 		&a.ReferenceScore, &a.ArticleDate, &a.CreatedAt)
 	if err == sql.ErrNoRows {
-		return a, errors.Wrap(ErrNoSuchArticle, "pgArticleRepo.FindByURL failed")
+		return a, ErrNoSuchArticle
 	} else if err != nil {
 		return a, errors.Wrap(err, "pgArticleRepo.FindByURL failed")
 	}
