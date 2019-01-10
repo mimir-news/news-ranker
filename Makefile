@@ -13,3 +13,6 @@ build-test:
 
 deploy:
 	kubectl apply -f deployment/
+
+image-name:
+	echo $(IMAGE)
