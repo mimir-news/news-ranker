@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: news-ranker
-          image: eu.gcr.io/mimir-185212/news-ranker:2.3
+          image: eu.gcr.io/mimir-185212/news-ranker:2.3.1
           env:
             - name: DB_HOST
               value: db-pooler
@@ -28,6 +28,8 @@ spec:
                 secretKeyRef:
                   name: db-credentials
                   key: newsranker.password
+            - name: DB_BINARY_PARAMETERS
+              value: "yes"
             - name: TWITTER_USERS
               value: "320000000"
             - name: REFERENCE_WEIGHT
@@ -54,7 +56,7 @@ spec:
                   name: mq-credentials
                   key: newsranker.password
             - name: MQ_PREFETCH_COUNT
-              value: "5"
+              value: "1"
             - name: HEARTBEAT_FILE
               value: "/tmp/news-ranker-health.txt"
             - name: HEARTBEAT_INTERVAL

@@ -29,7 +29,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:867041473654a9e661dd95747dd7639c7beb518c937384676b5fcc112f7dfc05"
+  digest = "1:84c743486bf350273cd7d61cbc6f5bd449805aa4cbfcb1e6fa8fc1aff3982dc2"
   name = "github.com/mimir-news/pkg"
   packages = [
     "dbutil",
@@ -39,8 +39,16 @@
     "schema/news",
   ]
   pruneopts = "UT"
-  revision = "4e4e33e450b36341c78352ad277322f761762426"
-  version = "0.7"
+  revision = "196038c202a0da467fc6aeb10dc8990226394022"
+  version = "0.8"
+
+[[projects]]
+  digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -135,6 +143,7 @@
     "github.com/mimir-news/pkg/mq",
     "github.com/mimir-news/pkg/mq/mqtest",
     "github.com/mimir-news/pkg/schema/news",
+    "github.com/pkg/errors",
     "github.com/stretchr/testify/assert",
     "go.uber.org/zap",
   ]

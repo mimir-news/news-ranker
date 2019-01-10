@@ -2,10 +2,10 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/mimir-news/news-ranker/pkg/domain"
 	"github.com/mimir-news/pkg/dbutil"
+	"github.com/pkg/errors"
 )
 
 // Common cluster repository errors.
@@ -35,7 +35,7 @@ func NewClusterRepo(db *sql.DB) ClusterRepo {
 func (r *pgClusterRepo) FindByHash(clusterHash string) (domain.ArticleCluster, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
-		return domain.ArticleCluster{}, err
+		return domain.ArticleCluster{}, errors.Wrap(err, "pgClusterRepo.FindByHash failed")
 	}
 
 	members, err := r.findClusterMembers(clusterHash, tx)
@@ -63,10 +63,15 @@ func (r *pgClusterRepo) findClusterMembers(clusterHash string, tx *sql.Tx) ([]do
 	if err == sql.ErrNoRows {
 		return nil, ErrNoSuchCluster
 	} else if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "pgClusterRepo.findClusterMembers failed")
 	}
 	defer rows.Close()
-	return mapRowsToClusterMemebers(rows)
+
+	members, err := mapRowsToClusterMemebers(rows)
+	if err != nil {
+		return nil, errors.Wrap(err, "pgClusterRepo.findClusterMembers failed")
+	}
+	return members, nil
 }
 
 func mapRowsToClusterMemebers(rows *sql.Rows) ([]domain.ClusterMember, error) {
@@ -93,7 +98,7 @@ func (r *pgClusterRepo) findCluster(clusterHash string, tx *sql.Tx) (domain.Arti
 	if err == sql.ErrNoRows {
 		return domain.ArticleCluster{}, ErrNoSuchCluster
 	} else if err != nil {
-		return domain.ArticleCluster{}, err
+		return domain.ArticleCluster{}, errors.Wrap(err, "pgClusterRepo.findCluster failed")
 	}
 	return c, nil
 }
@@ -101,7 +106,7 @@ func (r *pgClusterRepo) findCluster(clusterHash string, tx *sql.Tx) (domain.Arti
 func (r *pgClusterRepo) Update(cluster domain.ArticleCluster) error {
 	tx, err := r.db.Begin()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "pgClusterRepo.Update failed")
 	}
 
 	err = updateCluster(cluster, tx)
@@ -127,7 +132,7 @@ const updateClusterQuery = `
 func updateCluster(cluster domain.ArticleCluster, tx *sql.Tx) error {
 	res, err := tx.Exec(updateClusterQuery, cluster.Score, cluster.LeadArticleID, cluster.Hash)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "updateCluster failed")
 	}
 	return dbutil.AssertRowsAffected(res, 1, ErrUpdateFailed)
 }
@@ -180,7 +185,7 @@ func upsertClusterMembers(members []domain.ClusterMember, tx *sql.Tx) error {
 	for _, m := range members {
 		res, err := tx.Exec(upsertClusterMembersQuery, m.ID, m.ReferenceScore, m.SubjectScore, m.ClusterHash, m.ArticleID)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "upsertClusterMembers failed")
 		}
 		err = dbutil.AssertRowsAffected(res, 1, ErrFailedInsert)
 		if err != nil {

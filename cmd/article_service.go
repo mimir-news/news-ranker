@@ -20,6 +20,7 @@ func (e *env) handleScrapedArticleMessage(msg mq.Message, msgID string) error {
 	}
 
 	e.clusterArticle(article)
+	logger.Infow("Success in handling ScrapedArticle", "msgID", msgID)
 	return nil
 }
 

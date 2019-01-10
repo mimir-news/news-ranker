@@ -35,7 +35,7 @@
 
 [[constraint]]
   name = "github.com/mimir-news/pkg"
-  version = "0.7.0"
+  version = "0.8.0"
 
 [[constraint]]
   name = "github.com/CzarSimon/go-file-heartbeat"
@@ -48,3 +48,7 @@
 [[constraint]]
   name = "go.uber.org/zap"
   version = "1.9.1"
+
+[[constraint]]
+  name = "github.com/pkg/errors"
+  version = "0.8.1"

@@ -27,6 +27,7 @@ func (e *env) handleRankObjectMessage(msg mq.Message, msgID string) error {
 		}
 		e.rankExistingArticle(article, ro)
 	}
+	logger.Infow("Success in handling RankObject", "msgID", msgID)
 	return nil
 }
 

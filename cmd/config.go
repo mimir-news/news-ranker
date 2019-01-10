@@ -39,7 +39,7 @@ type mqConfig struct {
 }
 
 func mustGetMQConfig() mqConfig {
-	prefetchCount, err := strconv.Atoi(getenv("MQ_PREFETCH_COUNT", "5"))
+	prefetchCount, err := strconv.Atoi(getenv("MQ_PREFETCH_COUNT", "1"))
 	if err != nil {
 		logger.Fatalw("MQ_PREFETCH_COUNT parsing failed", "err", err)
 	}
