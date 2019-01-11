@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: news-ranker
-          image: eu.gcr.io/mimir-185212/news-ranker:2.3.2
+          image: eu.gcr.io/mimir-185212/news-ranker:2.3.3
           env:
             - name: DB_HOST
               value: db-pooler
