@@ -51,7 +51,7 @@ func (r *pgClusterRepo) FindByHash(clusterHash string) (domain.ArticleCluster, e
 	}
 
 	cluster.Members = members
-	return cluster, nil
+	return cluster, tx.Commit()
 }
 
 const findClusterMembersQuery = `
@@ -71,7 +71,7 @@ func (r *pgClusterRepo) findClusterMembers(clusterHash string, tx *sql.Tx) ([]do
 	if err != nil {
 		return nil, errors.Wrap(err, "pgClusterRepo.findClusterMembers failed")
 	}
-	return members, nil
+	return members, rows.Err()
 }
 
 func mapRowsToClusterMemebers(rows *sql.Rows) ([]domain.ClusterMember, error) {

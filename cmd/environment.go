@@ -26,9 +26,6 @@ func setupEnv(conf config) *env {
 	if err != nil {
 		logger.Fatalw("DB connection failed", "err", err)
 	}
-
-	db.SetMaxOpenConns(20)
-	db.SetMaxIdleConns(0)
 	runMigrations(db)
 
 	articleRepo := repository.NewArticleRepo(db)

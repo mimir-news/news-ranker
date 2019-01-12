@@ -78,7 +78,7 @@ func (r *pgArticleRepo) FindArticleSubjects(articleID string) ([]news.Subject, e
 	if err != nil {
 		return nil, errors.Wrap(err, "pgArticleRepo.FindArticleSubjects failed")
 	}
-	return subjects, nil
+	return subjects, rows.Err()
 }
 
 func mapRowsToSubjects(rows *sql.Rows) ([]news.Subject, error) {
@@ -111,7 +111,7 @@ func (r *pgArticleRepo) FindArticleReferers(articleID string) ([]news.Referer, e
 	if err != nil {
 		return nil, errors.Wrap(err, "pgArticleRepo.FindArticleReferers failed")
 	}
-	return referers, nil
+	return referers, rows.Err()
 }
 
 func mapRowsToReferers(rows *sql.Rows) ([]news.Referer, error) {
